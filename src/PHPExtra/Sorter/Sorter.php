@@ -55,9 +55,10 @@ class Sorter implements SorterInterface
      */
     public function orderBy($property, $direction = SorterInterface::ASC, ComparatorInterface $comparator = null)
     {
-        $this->propertyMap[$property] = array(
-            'direction' => $direction,
-            'comparator' => $comparator
+        $this->propertyMap[] = array(
+            'accessor'      => $property,
+            'direction'     => $direction,
+            'comparator'    => $comparator === null ? $this->comparator : $comparator
         );
         return $this;
     }
@@ -67,15 +68,35 @@ class Sorter implements SorterInterface
      */
     public function sort($collection)
     {
-        if(is_array($collection) || $collection instanceof \Traversable){
-
-
-
-
-
-
-        }else{
+        if(!is_array($collection) && !$collection instanceof \Traversable){
             throw new \RuntimeException(sprintf('Object of type %s is not supported', gettype($collection)));
         }
+
+        usort($collection, $this->createSortTransformFunction());
+        return $collection;
+    }
+
+    private function createSortTransformFunction()
+    {
+        $propertyMap = $this->propertyMap;
+        return function($a, $b) use ($propertyMap){
+
+            foreach($propertyMap as $property){
+                $valueA = $a[$property['accessor']];
+                $valueB = $b[$property['accessor']];
+
+                $cmp = $property['comparator'];
+                /** @var $cmp ComparatorInterface */
+
+                $result = $cmp->compare($valueA, $valueB);
+
+                if($result != 0){
+                    return $result * $property['direction'];
+                }
+            }
+
+            return 0;
+
+        };
     }
 }
