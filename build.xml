@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Default build configuration" default="build">
+
+    <property name="build.property.file" value="build.properties"/>
+    <property file="${build.property.file}"/>
+    <property name="build.version" value="${build.major.number}.${build.minor.number}.${build.revision.number}"/>
+    <!--<property name="build.version.file" value="${basedir}/src/Audioteka/Cart/Version.php"/>-->
+
+    <property name="php" value="php"/>
+    <property name="phpunit" value="phpunit"/>
+
+    <condition property="bin-extension" value=".bat" else="">
+        <os family="windows"/>
+    </condition>
+
+    <target name="current-version">
+        <echo>Current version: ${build.version}</echo>
+    </target>
+
+    <target name="release">
+        <antcall target="git-clean"/>
+        <antcall target="git-tag-and-push-release"/>
+        <antcall target="update-build-revision"/>
+        <antcall target="git-commit-and-push-all"/>
+
+        <echo>Release complete: </echo>
+
+    </target>
+
+    <target name="git-clean">
+        <exec executable="git">
+            <arg value="reset" />
+            <arg value="--hard" />
+        </exec>
+        <exec executable="git">
+            <arg value="clean" />
+            <arg value="-f" />
+            <arg value="-d" />
+        </exec>
+    </target>
+
+    <target name="git-commit-and-push-all">
+        <property file="${build.property.file}" prefix="next"/>
+        <property name="next.build.version" value="${next.build.major.number}.${next.build.minor.number}.${next.build.revision.number}"/>
+        <exec executable="git">
+            <arg value="commit" />
+            <arg value="--all" />
+            <arg value="-m" />
+            <arg value="Changed version number towards the next release ${next.build.version}" />
+        </exec>
+        <exec executable="git">
+            <arg value="push"/>
+        </exec>
+    </target>
+
+    <target name="git-tag-and-push-release">
+        <exec executable="git">
+            <arg value="tag" />
+            <arg value="-a" />
+            <arg value="${build.version}" />
+            <arg value="-m"/>
+            <arg value="Release ${build.version}"/>
+            <arg value="--force"/>
+        </exec>
+        <exec executable="git">
+            <arg value="push" />
+            <arg value="--tags" />
+            <arg value="--force" />
+        </exec>
+    </target>
+
+    <target name="update-build-revision">
+        <echo>Changing build version towards the next release</echo>
+
+        <propertyfile file="${build.property.file}">
+            <entry key="build.revision.number" type="int" operation="+" value="1" default="0" pattern="0"/>
+        </propertyfile>
+
+        <property file="${build.property.file}" prefix="next"/>
+        <property name="next.build.version" value="${next.build.major.number}.${next.build.minor.number}.${next.build.revision.number}"/>
+        <echo>${build.version} -> ${next.build.version}</echo>
+        <!--<echo>Modifying file: ${build.version.file}</echo>-->
+        <!--<replaceregexp file="${build.version.file}" match="\d+\.\d+\.\d+" replace="${next.build.version}" />-->
+    </target>
+
+    <target name="build" depends="prepare,lint,composer,security-checker,phploc,pdepend,phpmd,phpmd-ci,phpcs,phpcs-ci,phpcpd,phpunit,phpcb,api,cleanup"/>
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${basedir}/build/api"/>
+        <delete dir="${basedir}/build/code-browser"/>
+        <delete dir="${basedir}/build/coverage"/>
+        <delete dir="${basedir}/build/logs"/>
+        <delete dir="${basedir}/build/pdepend"/>
+    </target>
+
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <mkdir dir="${basedir}/build/api"/>
+        <mkdir dir="${basedir}/build/code-browser"/>
+        <mkdir dir="${basedir}/build/coverage"/>
+        <mkdir dir="${basedir}/build/logs"/>
+        <mkdir dir="${basedir}/build/pdepend"/>
+    </target>
+
+    <target name="lint">
+        <apply executable="${php}" failonerror="true">
+            <arg value="-l" />
+
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+
+            <fileset dir="${basedir}/tests">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="composer-install">
+        <get src="http://getcomposer.org/composer.phar" dest="${basedir}/composer.phar"/>
+    </target>
+
+    <target name="composer" depends="composer-install">
+        <exec executable="php" failonerror="true">
+            <arg value="composer.phar" />
+            <arg value="config" />
+            <arg value="--global" />
+            <arg value="discard-changes" />
+            <arg value="true" />
+        </exec>
+        <exec executable="php" failonerror="true">
+            <arg value="composer.phar" />
+            <arg value="update" />
+            <arg value="--verbose" />
+            <arg value="--no-interaction" />
+            <arg value="--profile" />
+        </exec>
+    </target>
+
+    <target name="security-checker">
+        <exec executable="${basedir}/vendor/bin/security-checker${bin-extension}">
+            <arg value="security:check" />
+            <arg path="${basedir}/composer.lock" />
+        </exec>
+    </target>
+
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="${basedir}/vendor/bin/phploc${bin-extension}">
+            <arg value="--log-csv" />
+            <arg value="${basedir}/build/logs/phploc.csv" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="pdepend"
+            description="Calculate software metrics using PHP_Depend">
+        <exec executable="${basedir}/vendor/bin/pdepend${bin-extension}">
+            <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD">
+        <exec executable="${basedir}/vendor/bin/phpmd${bin-extension}">
+            <arg path="${basedir}/src" />
+            <arg value="text" />
+            <arg value="${basedir}/build/phpmd.xml" />
+        </exec>
+    </target>
+
+    <target name="phpmd-ci"
+            description="Perform project mess detection using PHPMD">
+        <exec executable="${basedir}/vendor/bin/phpmd${bin-extension}">
+            <arg path="${basedir}/src" />
+            <arg value="xml" />
+            <arg value="${basedir}/build/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${basedir}/build/logs/pmd.xml" />
+        </exec>
+    </target>
+
+    <target name="phpcs-config">
+        <exec executable="${basedir}/vendor/bin/phpcs${bin-extension}">
+            <arg value="--config-set" />
+            <arg value="installed_paths" />
+            <arg path="./vendor/instaclick/symfony2-coding-standard"/>
+        </exec>
+    </target>
+
+    <target name="phpcs" depends="phpcs-config"
+            description="Find coding standard violations using PHP_CodeSniffer">
+        <exec executable="${basedir}/vendor/bin/phpcs${bin-extension}">
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--extensions=php" />
+            <arg value="--ignore=Autoload.php" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="phpcs-ci" depends="phpcs-config"
+            description="Find coding standard violations using PHP_CodeSniffer">
+        <exec executable="${basedir}/vendor/bin/phpcs${bin-extension}">
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--extensions=php" />
+            <arg value="--ignore=Autoload.php" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="phpcpd" description="Find duplicate code using PHPCPD">
+        <exec executable="${basedir}/vendor/bin/phpcpd${bin-extension}">
+            <arg value="--log-pmd" />
+            <arg value="${basedir}/build/logs/pmd-cpd.xml" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="phpunit" description="Run unit tests with PHPUnit">
+        <exec executable="${basedir}/vendor/bin/phpunit${bin-extension}" failonerror="true">
+            <arg value="${basedir}/tests" />
+        </exec>
+    </target>
+
+    <target name="phpcb"
+            description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="${basedir}/vendor/bin/phpcb${bin-extension}">
+            <arg value="--log" />
+            <arg path="${basedir}/build/logs" />
+            <arg value="--source" />
+            <arg path="${basedir}/src" />
+            <arg value="--output" />
+            <arg path="${basedir}/build/code-browser" />
+        </exec>
+    </target>
+
+    <target name="api" description="Create documentation">
+        <exec executable="${basedir}/vendor/bin/sami.php${bin-extension}" failonerror="false">
+            <arg value="update" />
+            <arg path="${basedir}/build/sami-config.php" />
+            <arg value="-v" />
+        </exec>
+    </target>
+
+    <target name="cleanup" description="Remove unused files created during build process">
+        <delete file="${basedir}/composer.phar"/>
+        <delete file="${basedir}/cache.properties"/>
+    </target>
+
+</project>
