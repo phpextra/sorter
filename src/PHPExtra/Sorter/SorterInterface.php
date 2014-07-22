@@ -11,11 +11,18 @@ use PHPExtra\Sorter\Comparator\ComparatorInterface;
  */
 interface SorterInterface
 {
+    /**
+     * Sort ascending
+     */
     const ASC = 1;
+
+    /**
+     * Sort descending
+     */
     const DESC = -1;
 
     /**
-     * Set default comparator for given sorter
+     * Set default comparator
      *
      * @param ComparatorInterface $strategy
      *
@@ -24,20 +31,18 @@ interface SorterInterface
     public function setComparator(ComparatorInterface $strategy);
 
     /**
-     * Add property that will be used for sorting
+     * Set default sort sortOrder
      *
-     * @param string              $property   Property name or callable accessor
-     * @param int                 $direction  Sort direction - ASC(1) or DESC(-1)
-     * @param ComparatorInterface $comparator Exclusive comparator for given property
+     * @param int $order
      *
      * @return $this
      */
-    public function orderBy($property, $direction = SorterInterface::ASC, ComparatorInterface $comparator = null);
+    public function setSortOrder($order);
 
     /**
-     * @param mixed $collection
+     * @param array|mixed[] $collection
      *
-     * @return \Traversable
+     * @return array|mixed[]
      */
-    public function sort($collection);
+    public function sort(array $collection);
 } 

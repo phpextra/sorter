@@ -19,4 +19,13 @@ interface ComparatorInterface
      * @return int
      */
     public function compare($a, $b);
-} 
+
+    /**
+     * Tell if current ComparatorInterface supports given value
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function supports($value);
+}

@@ -3,11 +3,11 @@
 namespace PHPExtra\Sorter\Comparator;
 
 /**
- * Compare as strings with support for unicode characters
+ * Case-sensitive multibyte string comparison
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-class NaturalUnicodeComparator implements ComparatorInterface
+class UnicodeComparatorInterface implements ComparatorInterface
 {
     /**
      * @var \Collator
@@ -30,8 +30,16 @@ class NaturalUnicodeComparator implements ComparatorInterface
      */
     public function compare($a, $b)
     {
-        // result can be false in case of an error - lets pretend that those strings are equal for now
+        //@todo result can be false in case of an error - lets pretend that those strings are equal for now
         $result = $this->collator->compare($a, $b);
         return $result !== false ? $result : 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($value)
+    {
+        return is_string($value) || (is_object($value));
     }
 }

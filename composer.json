@@ -1,7 +1,7 @@
 {
     "name": "phpextra/sorter",
-    "description": "Sort array and object by multiple fields with unicode characters",
-    "keywords": ["sorter", "array", "objects", "collections", "psr-0"],
+    "description": "Sort arrays and objects by multiple fields with unicode characters",
+    "keywords": ["sort", "sorter", "array", "objects", "collections", "psr-0"],
     "license": "BSD-3-Clause",
     "homepage": "https://github.com/phpextra/sorter",
     "support": {
@@ -27,7 +27,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.0",
-        "psr/log": "~1.0.0"
+        "ext-intl": ">=1.0.0",
+        "phpextra/common": "~1.1"
     },
     "require-dev": {
         "mockery/mockery": "~0.8",
