@@ -108,7 +108,7 @@ class ObjectSortStrategy extends AbstractStrategy
             }
 
             if(!isset($value)){
-                throw new \RuntimeException('Unable to resolve property value: %s', gettype($property));
+                throw new \RuntimeException(sprintf('Unable to resolve property value: %s', gettype($property)));
             }
 
             return $value;
