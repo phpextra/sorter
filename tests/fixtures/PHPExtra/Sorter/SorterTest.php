@@ -2,7 +2,9 @@
 
 namespace fixtures\PHPExtra\Sorter;
 
-use PHPExtra\Sorter\SorterInterface;
+use PHPExtra\Sorter\Sorter;
+use PHPExtra\Sorter\Strategy\ObjectSortStrategy;
+
 
 /**
  * The SorterTest class
@@ -11,20 +13,15 @@ use PHPExtra\Sorter\SorterInterface;
  */
 class SorterTest extends \PHPUnit_Framework_TestCase 
 {
-    public function testCreateNewSorterInstanceWithoutLocale()
+    public function testCreateNewSorterInstance()
     {
-        $sorter = new SorterInterface();
+        $sorter = new Sorter();
     }
 
-    public function testCreateNewSorterInstanceWithLocale()
+    public function testCreateNewSorterInstanceWithCustomStrategy()
     {
-        $sorter = new SorterInterface('pl_PL');
-        $this->assertEquals('pl_PL', $sorter->getLocale());
+        $sorter = new Sorter(new ObjectSortStrategy());
     }
 
-    public function testSortSimpleArrayReturnsSortedArray()
-    {
-
-    }
 }
  

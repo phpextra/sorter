@@ -7,7 +7,7 @@ namespace PHPExtra\Sorter\Comparator;
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-class UnicodeCIComparator extends UnicodeComparatorInterface
+class UnicodeCIComparator extends UnicodeComparator
 {
     /**
      * {@inheritdoc}

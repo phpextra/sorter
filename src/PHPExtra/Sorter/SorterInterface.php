@@ -2,7 +2,7 @@
 
 namespace PHPExtra\Sorter;
 
-use PHPExtra\Sorter\Comparator\ComparatorInterface;
+use PHPExtra\Sorter\Strategy\StrategyInterface;
 
 /**
  * The SorterInterface interface
@@ -21,28 +21,11 @@ interface SorterInterface
      */
     const DESC = -1;
 
-    /**
-     * Set default comparator
-     *
-     * @param ComparatorInterface $strategy
-     *
-     * @return $this
-     */
-    public function setComparator(ComparatorInterface $strategy);
 
     /**
-     * Set default sort sortOrder
+     * @param array $collection
      *
-     * @param int $order
-     *
-     * @return $this
-     */
-    public function setSortOrder($order);
-
-    /**
-     * @param array|mixed[] $collection
-     *
-     * @return array|mixed[]
+     * @return array
      */
     public function sort(array $collection);
 } 

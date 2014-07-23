@@ -27,8 +27,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.0",
-        "ext-intl": ">=1.0.0",
-        "phpextra/common": "~1.1"
+        "ext-intl": ">=1.0.0"
     },
     "require-dev": {
         "mockery/mockery": "~0.8",

@@ -2,108 +2,56 @@
 
 namespace PHPExtra\Sorter;
 
-use PHPExtra\Sorter\Comparator\ComparatorInterface;
+use PHPExtra\Sorter\Strategy\StrategyInterface;
+use PHPExtra\Sorter\Strategy\StringArraySortStrategy;
 
 /**
  * The AbstractSorterInterface class
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-abstract class AbstractSorterInterface implements SorterInterface
+abstract class AbstractSorter implements SorterInterface
 {
     /**
-     * @var int
+     * @var StrategyInterface
      */
-    private $sortOrder = self::ASC;
+    private $strategy;
 
     /**
-     * @var SorterInterface
-     */
-    private $comparator;
-
-    /**
-     * @param int                $sortOrder
-     * @param ComparatorInterface $comparator
+     * Create new sorter with given strategy
+     * If no strategy given, default StringArraySortStrategy will be used
      *
-     * @internal param int $defaultOrder
+     * @param StrategyInterface $strategy
      */
-    function __construct(ComparatorInterface $comparator = null, $sortOrder = null)
+    function __construct(StrategyInterface $strategy = null)
     {
-        if($sortOrder !== null){
-            $this->setSortOrder($sortOrder);
+        if(!$strategy){
+            $strategy = new StringArraySortStrategy();
         }
 
-        if($comparator !== null){
-            $this->setComparator($comparator);
-        }
+        $this->setStrategy($strategy);
     }
 
     /**
-     * {@inheritdoc}
+     * @param StrategyInterface $strategy
+     *
+     * @return $this
      */
-    public function setComparator(ComparatorInterface $comparator)
+    public function setStrategy($strategy)
     {
-        $this->comparator = $comparator;
+        $this->strategy = $strategy;
 
         return $this;
     }
 
     /**
-     * @return SorterInterface
-     */
-    protected function getComparator()
-    {
-        return $this->comparator;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function setSortOrder($order)
+    public function sort(array $collection)
     {
-        $this->sortOrder = $order;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getSortOrder()
-    {
-        return $this->sortOrder;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sort($collection)
-    {
-        $comparator = $this->getComparator();
-        $checker = $this->getValueChecker();
-
-        usort($collection, function($a, $b) use ($comparator, $checker){
-            /** @var ComparatorInterface $comparator */
-            $checker($a, $b, $comparator);
-            return $comparator->compare($a, $b);
-        });
-        return $collection;
-    }
-
-    /**
-     * Returns a closure that validates values before passing them to the ComparatorInterface
-     *
-     * @return \Closure
-     */
-    protected function getValueChecker()
-    {
-        return function($a, $b, ComparatorInterface $comparator){
-            if(!$comparator->supports($a)){
-                throw new \RuntimeException(sprintf('Comparator does not support %s', gettype($a)));
-            }
-
-            if(!$comparator->supports($b)){
-                throw new \RuntimeException(sprintf('Comparator does not support %s', gettype($b)));
-            }
-        };
+        if(!$this->strategy){
+            throw new \RuntimeException('Strategy was not defined');
+        }
+        return $this->strategy->sort($collection);
     }
 }

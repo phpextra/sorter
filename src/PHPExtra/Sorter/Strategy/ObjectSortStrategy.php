@@ -1,10 +1,9 @@
 <?php
 
-namespace PHPExtra\Sorter;
+namespace PHPExtra\Sorter\Strategy;
 
 use PHPExtra\Sorter\Comparator\ComparatorInterface;
 use PHPExtra\Sorter\Comparator\UnicodeCIComparator;
-use PHPExtra\Type\Collection\CollectionInterface;
 
 /**
  * Case-insensitive object collection sorter
@@ -12,7 +11,7 @@ use PHPExtra\Type\Collection\CollectionInterface;
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-class ObjectSorter extends AbstractSorterInterface
+class ObjectSortStrategy extends AbstractStrategy
 {
     /**
      * @var array
@@ -24,7 +23,10 @@ class ObjectSorter extends AbstractSorterInterface
      */
     function __construct(ComparatorInterface $comparator = null)
     {
-        parent::__construct(new UnicodeCIComparator());
+        if(!$comparator){
+            $comparator = new UnicodeCIComparator();
+        }
+        parent::__construct($comparator);
     }
 
     /**

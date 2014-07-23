@@ -7,7 +7,7 @@ namespace PHPExtra\Sorter\Comparator;
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-class UnicodeComparatorInterface implements ComparatorInterface
+class UnicodeComparator implements ComparatorInterface
 {
     /**
      * @var \Collator
