@@ -2,8 +2,6 @@
 
 namespace PHPExtra\Sorter;
 
-use PHPExtra\Sorter\Strategy\StrategyInterface;
-
 /**
  * The SorterInterface interface
  *
