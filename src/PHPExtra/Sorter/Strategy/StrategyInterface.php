@@ -15,11 +15,11 @@ interface StrategyInterface extends SorterInterface
     /**
      * Set default comparator
      *
-     * @param ComparatorInterface $strategy
+     * @param ComparatorInterface $comparator
      *
      * @return $this
      */
-    public function setComparator(ComparatorInterface $strategy);
+    public function setComparator(ComparatorInterface $comparator);
 
     /**
      * Set default sort sortOrder
