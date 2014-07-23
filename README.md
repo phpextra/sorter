@@ -8,21 +8,21 @@ Library is under active development and it aims to be **simple** and **fast**. A
 CLI:
 
 ```
-> composer require phpextra/event-manager
+> composer require phpextra/sorter
 ```
 
 JSON:
 
 ```json
 "require": {
-    "phpextra/sorter":"*"
+    "phpextra/sorter":"~1.0"
 }
 ```
 
 ##Updating to the latest version
 
 ```
-> composer update skajdo/sorter
+> composer update phpextra/sorter
 ```
 
 ##Testing
@@ -30,7 +30,7 @@ JSON:
 On windows open cmd window in the project directory, then type:
 
 ```
-> composer update & test
+> composer install & test
 ```
 
 ## Usage example

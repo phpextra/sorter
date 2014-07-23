@@ -1,6 +1,5 @@
 build/report/*
 build/logs/*
 .idea
-composer.lock
 vendor
 atlassian-ide-plugin.xml
