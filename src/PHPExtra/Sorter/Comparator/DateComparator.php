@@ -7,7 +7,7 @@ namespace PHPExtra\Sorter\Comparator;
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
-class DateComparatorInterface implements ComparatorInterface
+class DateComparator implements ComparatorInterface
 {
     /**
      * {@inheritdoc}

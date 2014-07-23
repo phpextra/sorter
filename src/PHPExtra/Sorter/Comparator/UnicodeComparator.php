@@ -4,7 +4,10 @@ namespace PHPExtra\Sorter\Comparator;
 
 /**
  * Case-sensitive multibyte string comparison
+ * This comparator uses Comparator object from INTL with
+ * attirbute Collator::NUMERIC_COLLATION set to TRUE.
  *
+ * @see Collator::NUMERIC_COLLATION
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
 class UnicodeComparator implements ComparatorInterface
@@ -23,6 +26,7 @@ class UnicodeComparator implements ComparatorInterface
             $locale = \Locale::getDefault();
         }
         $this->collator = new \Collator($locale);
+        $this->collator->setAttribute(\Collator::NUMERIC_COLLATION, \Collator::ON);
     }
 
     /**
@@ -40,6 +44,6 @@ class UnicodeComparator implements ComparatorInterface
      */
     public function supports($value)
     {
-        return is_string($value) || (is_object($value));
+        return $value === null || is_string($value) || is_int($value) || is_float($value);
     }
 }

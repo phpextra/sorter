@@ -3,6 +3,7 @@
 namespace PHPExtra\Sorter\Strategy;
 
 use PHPExtra\Sorter\Comparator\ComparatorInterface;
+use PHPExtra\Sorter\Comparator\UnicodeCIComparator;
 use PHPExtra\Sorter\SorterInterface;
 
 /**
@@ -30,13 +31,14 @@ abstract class AbstractStrategy implements StrategyInterface
      */
     function __construct(ComparatorInterface $comparator = null, $sortOrder = null)
     {
-        if($sortOrder !== null){
+        if($sortOrder){
             $this->setSortOrder($sortOrder);
         }
 
-        if($comparator !== null){
-            $this->setComparator($comparator);
+        if(!$comparator){
+            $comparator = new UnicodeCIComparator();
         }
+        $this->setComparator($comparator);
     }
 
     /**
@@ -98,12 +100,15 @@ abstract class AbstractStrategy implements StrategyInterface
     protected function getValueChecker()
     {
         return function($a, $b, ComparatorInterface $comparator){
+
+            $exceptionMessage = 'Comparator (%s) does not support "%s"';
+
             if(!$comparator->supports($a)){
-                throw new \RuntimeException(sprintf('Comparator does not support %s', gettype($a)));
+                throw new \RuntimeException(sprintf($exceptionMessage, get_class($comparator), gettype($a)));
             }
 
             if(!$comparator->supports($b)){
-                throw new \RuntimeException(sprintf('Comparator does not support %s', gettype($b)));
+                throw new \RuntimeException(sprintf($exceptionMessage, get_class($comparator), gettype($a)));
             }
         };
     }

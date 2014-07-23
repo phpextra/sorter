@@ -9,4 +9,5 @@ namespace PHPExtra\Sorter\Strategy;
  */
 class StringArraySortStrategy extends AbstractStrategy
 {
-}
+
+} 

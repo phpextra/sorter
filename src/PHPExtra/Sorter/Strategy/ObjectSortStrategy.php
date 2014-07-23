@@ -68,7 +68,7 @@ class ObjectSortStrategy extends AbstractStrategy
                 $cmp = $property['comparator'];
                 /** @var $cmp ComparatorInterface */
 
-                $valueChecker($a, $b, $cmp);
+                $valueChecker($valueA, $valueB, $cmp);
                 $result = $cmp->compare($valueA, $valueB);
 
                 if($result != 0){
@@ -92,27 +92,22 @@ class ObjectSortStrategy extends AbstractStrategy
     {
         return function($property, $accessor = null){
 
-            if(is_string($property)){
+            if(is_string($property) || !$accessor){
                 return $property;
             }
 
             if($accessor instanceof \Closure){
-                $value = $accessor($property);
+                return $accessor($property);
             }elseif(is_string($accessor)){
 
                 if(is_array($property) || $property instanceof \ArrayAccess){
-                    $value = $property[$accessor];
+                    return $property[$accessor];
                 }elseif(is_object($property) && property_exists($property, $accessor)){
-                    $value = $property->$accessor;
+                    return $property->$accessor;
                 }
             }
 
-            if(!isset($value)){
-                throw new \RuntimeException(sprintf('Unable to resolve property value: %s', gettype($property)));
-            }
-
-            return $value;
-
+            throw new \RuntimeException(sprintf('Unable to resolve property value: %s', gettype($property)));
         };
     }
 
