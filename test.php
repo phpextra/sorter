@@ -2,9 +2,8 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PHPExtra\Sorter\ObjectSorter;
 use PHPExtra\Sorter\SorterInterface;
-use PHPExtra\Sorter\StringSorter;
+use PHPExtra\Sorter\Strategy\ObjectSortStrategy;
 use PHPExtra\Type\Collection\Collection;
 
 header('Content-type: text/plain; charset=utf-8');
@@ -36,18 +35,12 @@ $collection2 = array(
     'ąnia'
 );
 
-$col = new Collection($collection1);
-
-//var_dump($col);
-$sorter = new ObjectSorter();
+$sorter = new ObjectSortStrategy();
 $sorter
     ->sortBy('name', SorterInterface::ASC)
     ->sortBy('pos', SorterInterface::ASC)
     ->sortBy('plec', SorterInterface::ASC)
 ;
-//var_dump($sorter->sort($collection1));
 
-//$sorter = new StringSorter();
-
-var_dump(new Collection($sorter->sort($col)));
+var_dump($sorter->sort($collection2));
 
