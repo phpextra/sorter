@@ -19,7 +19,7 @@ abstract class AbstractStrategy implements StrategyInterface
     private $sortOrder = self::ASC;
 
     /**
-     * @var SorterInterface
+     * @var ComparatorInterface
      */
     private $comparator;
 
@@ -52,7 +52,7 @@ abstract class AbstractStrategy implements StrategyInterface
     }
 
     /**
-     * @return SorterInterface
+     * @return ComparatorInterface
      */
     protected function getComparator()
     {
@@ -103,12 +103,15 @@ abstract class AbstractStrategy implements StrategyInterface
 
             $exceptionMessage = 'Comparator (%s) does not support "%s"';
 
+            $error = null;
             if(!$comparator->supports($a)){
-                throw new \RuntimeException(sprintf($exceptionMessage, get_class($comparator), gettype($a)));
+                $error = sprintf($exceptionMessage, get_class($comparator), gettype($a));
+            }elseif(!$comparator->supports($b)){
+                $error = sprintf($exceptionMessage, get_class($comparator), gettype($a));
             }
 
-            if(!$comparator->supports($b)){
-                throw new \RuntimeException(sprintf($exceptionMessage, get_class($comparator), gettype($a)));
+            if($error !== null){
+                throw new \RuntimeException($error);
             }
         };
     }

@@ -21,6 +21,7 @@ abstract class AbstractSorter implements SorterInterface
      * Create new sorter with given strategy
      * If no strategy given, default StringArraySortStrategy will be used
      *
+     * @see StringArraySortStrategy
      * @param StrategyInterface $strategy
      */
     function __construct(StrategyInterface $strategy = null)
@@ -41,6 +42,19 @@ abstract class AbstractSorter implements SorterInterface
     {
         $this->strategy = $strategy;
 
+        return $this;
+    }
+
+    /**
+     * Set sort order
+     *
+     * @param int $order
+     *
+     * @return $this
+     */
+    public function setSortOrder($order)
+    {
+        $this->strategy->setSortOrder($order);
         return $this;
     }
 

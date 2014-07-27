@@ -4,8 +4,7 @@ namespace PHPExtra\Sorter\Comparator;
 
 /**
  * Case-sensitive multibyte string comparison
- * This comparator uses Comparator object from INTL with
- * attirbute Collator::NUMERIC_COLLATION set to TRUE.
+ * This comparator uses Collator object from INTL with Collator::NUMERIC_COLLATION flag set to TRUE.
  *
  * @see Collator::NUMERIC_COLLATION
  * @author Jacek Kobus <kobus.jacek@gmail.com>
@@ -27,6 +26,16 @@ class UnicodeComparator implements ComparatorInterface
         }
         $this->collator = new \Collator($locale);
         $this->collator->setAttribute(\Collator::NUMERIC_COLLATION, \Collator::ON);
+    }
+
+    /**
+     * Get locale used by collator
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->collator->getLocale(\Locale::VALID_LOCALE);
     }
 
     /**

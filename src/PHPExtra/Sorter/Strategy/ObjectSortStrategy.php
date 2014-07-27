@@ -117,7 +117,7 @@ class ObjectSortStrategy extends AbstractStrategy
     public function sort(array $collection)
     {
         if(empty($this->propertyMap)){
-            throw new \RuntimeException(sprintf('Missing sort properties - add them using orderBy(...)'));
+            throw new \RuntimeException(sprintf('Missing sort properties - add them using sortBy(...)'));
         }
 
         usort($collection, $this->createSortTransformFunction());

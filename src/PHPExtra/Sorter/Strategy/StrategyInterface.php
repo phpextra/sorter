@@ -22,7 +22,7 @@ interface StrategyInterface extends SorterInterface
     public function setComparator(ComparatorInterface $comparator);
 
     /**
-     * Set default sort sortOrder
+     * Set default sort order for given strategy
      *
      * @param int $order
      *
