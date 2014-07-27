@@ -79,8 +79,10 @@ $strategy->setComparator(new MyOwnPropertyComparator());
 ## Installation (Composer)
 
 ```json
-"require": {
-    "phpextra/sorter":"~1.0"
+{
+    "require": {
+        "phpextra/sorter":"~1.0"
+    }
 }
 ```
 
