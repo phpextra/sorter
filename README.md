@@ -34,6 +34,8 @@ $sorter = new Sorter($strategy);
 
 $sorter->sort(...);
 
+```
+
 ###Sorting complex objects
 
 ```php
