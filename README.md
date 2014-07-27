@@ -6,7 +6,77 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpextra/sorter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
 [![GitTip](http://img.shields.io/gittip/jkobus.svg)](https://www.gittip.com/jkobus)
 
-Library is under active development and it aims to be **simple** and **fast**. All pull requests and bug reports are welcome.
+## Usage
+
+###Sorting out-of-the box using default settings
+
+By default sorter support string arrays out of the box.
+
+```php
+
+$data = array('ccc', 'aaa', 'bbb');
+$sorter = new PHPExtra\Sorter\Sorter();
+
+$data = $sorter->setSortOrder(Sorter:ASC)->sort($data);
+
+print_r($data); // returns array('aaa', 'bbb', 'ccc');
+
+```
+
+###Sorting complex objects
+
+```php
+
+$data = array(
+    (object)array('name' => 'Ann', 'position' => '3', 'rating' => '3'),
+    (object)array('name' => 'Ann', 'position' => '2', 'rating' => '2'),
+    (object)array('name' => 'Ann', 'position' => '2', 'rating' => '1'),
+    (object)array('name' => 'Betty', 'position' => '1', 'rating' => '2'),
+);
+
+$strategy = new ObjectSortStrategy();
+$strategy
+    ->setSortOrder(Sorter::ASC)
+    ->sortBy('position')    // sort by position
+    ->sortBy('name')        // if position is equal sort by name
+    ->sortBy('rating')      // if position and name are equal, use rating
+;
+
+$sorter = new PHPExtra\Sorter\Sorter();
+$data = $sorter->setStrategy($strategy)->sort($data);
+
+print_r($data);
+
+// returns:
+// array(
+//     (object)array('name' => 'Betty', 'position' => '1', 'rating' => '2'),
+//     (object)array('name' => 'Ann', 'position' => '2', 'rating' => '1'),
+//     (object)array('name' => 'Ann', 'position' => '2', 'rating' => '2'),
+//     (object)array('name' => 'Ann', 'position' => '3', 'rating' => '3'),
+// )
+
+```
+
+###Customizing
+
+You can create your own strategies for more complicated data sets.
+Provided ObjectSortStrategy should cover most of your needs, and if it does not, try using your own Comparators.
+You can replace default Comparators for a whole Strategy or define your own only for specific properties:
+
+```php
+
+$strategy
+    ->setSortOrder(Sorter::ASC)
+    ->sortBy('position')
+    ->sortBy('name', Sorter::DESC, new MyOwnPropertyComparator())
+    ->sortBy('rating')
+;
+
+// or ...
+
+$strategy->setComparator(new MyOwnPropertyComparator());
+
+```
 
 ## Installation (Composer)
 
@@ -18,15 +88,10 @@ Library is under active development and it aims to be **simple** and **fast**. A
 
 ##Running tests
 
-On windows open cmd window in the project directory, then type:
-
 ```
-> composer install & test
+// Windows
+composer install & call ./vendor/bin/phpunit.bat ./tests
 ```
-
-## Usage example
-
-[todo]
 
 ##Contributing
 
@@ -41,6 +106,8 @@ If you would like to help take a look at the [list of issues](https://github.com
 See **composer.json** for a full list of dependencies.
 
 ##Authors
+
+This library was inspired by [https://github.com/graze/sort](https://github.com/graze/sort).
 
 Jacek Kobus - <kobus.jacek@gmail.com>
 
