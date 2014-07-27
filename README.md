@@ -1,9 +1,8 @@
 #Sorter
 [![Latest Stable Version](https://poser.pugx.org/phpextra/sorter/v/stable.svg)](https://packagist.org/packages/phpextra/sorter)
 [![Total Downloads](https://poser.pugx.org/phpextra/sorter/downloads.svg)](https://packagist.org/packages/phpextra/sorter)
-[![Latest Unstable Version](https://poser.pugx.org/phpextra/sorter/v/unstable.svg)](https://packagist.org/packages/phpextra/sorter)
 [![License](https://poser.pugx.org/phpextra/sorter/license.svg)](https://packagist.org/packages/phpextra/sorter)
-[![Build Status](https://travis-ci.org/phpextra/sorter.png?branch=master)](https://travis-ci.org/phpextra/sorter)
+[![Build Status](http://img.shields.io/travis/phpextra/sorter.svg)](https://travis-ci.org/phpextra/sorter)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpextra/sorter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
 [![GitTip](http://img.shields.io/gittip/jkobus.svg)](https://www.gittip.com/jkobus)
 
