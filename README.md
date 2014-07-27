@@ -4,6 +4,7 @@
 [![License](https://poser.pugx.org/phpextra/sorter/license.svg)](https://packagist.org/packages/phpextra/sorter)
 [![Build Status](http://img.shields.io/travis/phpextra/sorter.svg)](https://travis-ci.org/phpextra/sorter)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpextra/sorter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/phpextra/sorter/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
 [![GitTip](http://img.shields.io/gittip/jkobus.svg)](https://www.gittip.com/jkobus)
 
 ## Usage
