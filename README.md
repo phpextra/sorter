@@ -20,6 +20,19 @@ $data = $sorter->setSortOrder(Sorter:ASC)->sort($data);
 print_r($data); // returns array('aaa', 'bbb', 'ccc');
 
 ```
+###Sort using a specific locale
+
+Unicode comparator is the default comparator in this library and it uses default system locale (from php.ini) if it was not provided.
+Changing system locale after creating comparator will NOT change its locale.
+
+```php
+
+$strategy = new StringArraySortStrategy();
+$strategy->setComparator(new UnicodeCIComparator('pl_PL'));
+
+$sorter = new Sorter($strategy);
+
+$sorter->sort(...);
 
 ###Sorting complex objects
 
