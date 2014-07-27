@@ -10,8 +10,6 @@
 
 ###Sorting out-of-the box using default settings
 
-By default sorter support string arrays out of the box.
-
 ```php
 
 $data = array('ccc', 'aaa', 'bbb');
