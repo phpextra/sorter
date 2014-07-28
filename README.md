@@ -53,7 +53,7 @@ $strategy
     ->setSortOrder(Sorter::ASC)
     ->sortBy('position')    // sort by position
     ->sortBy('name')        // if position is equal sort by name
-    ->sortBy('rating')      // if position and name are equal, use rating
+    ->sortBy(function($object){return $object->rating})      // if position and name are equal, use rating
 ;
 
 $sorter = new PHPExtra\Sorter\Sorter();
@@ -70,6 +70,16 @@ print_r($data);
 // )
 
 ```
+
+**sortBy($accessor, $order, $comparator)** takes three arguments:
+
+**$accessor** - that can be either a string or a closure that will extract value from an object.
+If it's string strategy will try to access it like an array if possible, otherwise it will check if there is a public property with given name.
+
+**$order** - int value; both (-1, 1) are available as constants in SorterInterface.
+
+**ComparatorInterface $comparator** - comparator that will be used exclusively for that field.
+
 
 ###Customizing
 
