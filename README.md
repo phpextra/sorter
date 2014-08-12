@@ -16,7 +16,7 @@
 $data = array('ccc', 'aaa', 'bbb');
 $sorter = new PHPExtra\Sorter\Sorter();
 
-$data = $sorter->setSortOrder(Sorter:ASC)->sort($data);
+$data = $sorter->setSortOrder(Sorter::ASC)->sort($data);
 
 print_r($data); // returns array('aaa', 'bbb', 'ccc');
 
@@ -24,7 +24,7 @@ print_r($data); // returns array('aaa', 'bbb', 'ccc');
 ###Sort using a specific locale
 
 Unicode comparator is the default comparator in this library and it uses default system locale (from php.ini) if it was not provided.
-Changing system locale after creating comparator will NOT change its locale.
+Changing system locale after creating a new instance of comparator will NOT change its locale.
 
 ```php
 
