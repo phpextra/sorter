@@ -31,5 +31,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7"
+    },
+    "archive": {
+        "exclude": ["*", ".*", "!/src", "!/README.md", "!/LICENSE.md"]
     }
 }
