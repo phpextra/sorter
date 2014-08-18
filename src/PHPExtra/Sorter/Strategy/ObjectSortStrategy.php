@@ -83,7 +83,7 @@ class ObjectSortStrategy extends AbstractStrategy
 
     /**
      * Get callable used for extracting values from sortable entities (objects, arrays etc.)
-     * This method extracts value of k, where k is an element of collection(i => k).
+     * This method extracts value from k, where k is an element of collection(i => k).
      * Accessor can be customized to add sorting ability to a complex objects.
      *
      * @return \Closure Takes two arguments, $property and $accessor
