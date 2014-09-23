@@ -3,3 +3,4 @@ build/logs/*
 .idea
 vendor
 atlassian-ide-plugin.xml
+/nbproject/
