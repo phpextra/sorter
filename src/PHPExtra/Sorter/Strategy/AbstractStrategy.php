@@ -17,6 +17,12 @@ abstract class AbstractStrategy implements StrategyInterface
      * @var int
      */
     private $sortOrder = self::ASC;
+    
+    /**
+     *
+     * @var bool
+     */
+    private $maintainKeyAssociation = false;
 
     /**
      * @var ComparatorInterface
@@ -75,6 +81,20 @@ abstract class AbstractStrategy implements StrategyInterface
     {
         return $this->sortOrder;
     }
+    
+    /**
+     * 
+     * {@inheritdoc}
+     */
+    public function setMaintainKeyAssociation($maintainKeyAssociation)
+    {
+        $this->maintainKeyAssociation = (bool)$maintainKeyAssociation;
+    }
+    
+    public function getMaintainKeyAssociation()
+    {
+        return $this->maintainKeyAssociation;
+    }
 
     /**
      * {@inheritdoc}
@@ -83,8 +103,9 @@ abstract class AbstractStrategy implements StrategyInterface
     {
         $comparator = $this->getComparator();
         $checker = $this->getValueChecker();
+        $function = $this->getMaintainKeyAssociation() ? 'uasort' : 'usort';
 
-        usort($collection, function($a, $b) use ($comparator, $checker){
+        $function($collection, function($a, $b) use ($comparator, $checker){
             /** @var ComparatorInterface $comparator */
             $checker($a, $b, $comparator);
             return $comparator->compare($a, $b);
