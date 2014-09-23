@@ -2,8 +2,8 @@
 
 namespace PHPExtra\Sorter;
 
+use PHPExtra\Sorter\Strategy\SimpleSortStrategy;
 use PHPExtra\Sorter\Strategy\StrategyInterface;
-use PHPExtra\Sorter\Strategy\StringArraySortStrategy;
 
 /**
  * The AbstractSorterInterface class
@@ -21,13 +21,15 @@ abstract class AbstractSorter implements SorterInterface
      * Create new sorter with given strategy
      * If no strategy given, default StringArraySortStrategy will be used
      *
-     * @see StringArraySortStrategy
+     * @see SimpleSortStrategy
+     * @see ComplexSortStrategy
+     *
      * @param StrategyInterface $strategy
      */
     function __construct(StrategyInterface $strategy = null)
     {
-        if(!$strategy){
-            $strategy = new StringArraySortStrategy();
+        if (!$strategy) {
+            $strategy = new SimpleSortStrategy();
         }
 
         $this->setStrategy($strategy);
@@ -55,6 +57,7 @@ abstract class AbstractSorter implements SorterInterface
     public function setSortOrder($order)
     {
         $this->strategy->setSortOrder($order);
+
         return $this;
     }
 
@@ -63,9 +66,10 @@ abstract class AbstractSorter implements SorterInterface
      */
     public function sort(array $collection)
     {
-        if(!$this->strategy){
+        if (!$this->strategy) {
             throw new \RuntimeException('Strategy was not defined');
         }
+
         return $this->strategy->sort($collection);
     }
 }

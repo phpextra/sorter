@@ -29,12 +29,12 @@ interface StrategyInterface extends SorterInterface
      * @return $this
      */
     public function setSortOrder($order);
-    
+
     /**
      * Set maintain key association option true or false
-     * 
+     *
      * @param bool $associative
-     * 
+     *
      * @return $this
      */
     public function setMaintainKeyAssociation($associative);

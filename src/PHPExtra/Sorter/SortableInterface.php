@@ -3,7 +3,7 @@
 namespace PHPExtra\Sorter;
 
 /**
- * The SortableInterface interface
+ * Any object that supports Sorter should implement this interface.
  *
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
