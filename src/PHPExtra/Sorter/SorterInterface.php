@@ -19,7 +19,6 @@ interface SorterInterface
      */
     const DESC = -1;
 
-
     /**
      * @param array $collection
      *

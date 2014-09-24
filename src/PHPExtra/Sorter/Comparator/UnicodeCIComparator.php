@@ -5,6 +5,7 @@ namespace PHPExtra\Sorter\Comparator;
 /**
  * Case-insensitive multibyte string comparison
  *
+ * @see UnicodeComparator
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  */
 class UnicodeCIComparator extends UnicodeComparator

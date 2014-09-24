@@ -23,12 +23,11 @@ print_r($data); // returns array('aaa', 'bbb', 'ccc');
 ```
 ###Sort using a specific locale
 
-Unicode comparator is the default comparator in this library and it uses default system locale (from php.ini) if it was not provided.
-Changing system locale after creating a new instance of comparator will NOT change its locale.
+Unicode comparator is the default comparator in this library and by default during creation it uses current system locale (from php.ini).
 
 ```php
 
-$strategy = new StringArraySortStrategy();
+$strategy = new SimpleSortStrategy();
 $strategy->setComparator(new UnicodeCIComparator('pl_PL'));
 
 $sorter = new Sorter($strategy);
@@ -48,7 +47,7 @@ $data = array(
     (object)array('name' => 'Betty', 'position' => '1', 'rating' => '2'),
 );
 
-$strategy = new ObjectSortStrategy();
+$strategy = new ComplexSortStrategy();
 $strategy
     ->setSortOrder(Sorter::ASC)
     ->sortBy('position')    // sort by position
@@ -101,6 +100,13 @@ $strategy
 $strategy->setComparator(new MyOwnPropertyComparator());
 
 ```
+
+## External API
+
+External API:
+
+SortableInterface, ComparatorInterface, StrategyInterface, SorterInterface
+
 
 ## Installation (Composer)
 
