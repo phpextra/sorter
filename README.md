@@ -24,6 +24,8 @@ print_r($data); // returns array('aaa', 'bbb', 'ccc');
 ###Sort using a specific locale
 
 Unicode comparator is the default comparator in this library and by default during creation it uses current system locale (from php.ini).
+It's worth to notice that when using this comparator, it may result odd-looking results for numbers. For example `-1000` is greater than `-100`.
+If you want to compare numbers by their real value, use `NumericComparator`.
 
 ```php
 

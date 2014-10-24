@@ -11,6 +11,25 @@ use PHPExtra\Sorter\Comparator\UnicodeComparator;
  */
 class UnicodeComparatorTest extends \PHPUnit_Framework_TestCase 
 {
+    /**
+     * @return array
+     */
+    public function numbers()
+    {
+        return array(
+            array(-1000, -100, 1), // correct
+            array(1000, -100, 1),
+            array(-100, -100, 0),
+
+            array(-100, -1000, -1), // correct
+            array(-100, 1000, -1),
+
+            array(100, 1000, -1),
+            array(1000, 100, 1),
+            array(100, 100, 0),
+        );
+    }
+
     public function testCreateNewUnicodeComparatorInstanceWithoutLocaleReturnsInstanceWithDefaultSystemLocale()
     {
         $comparator = new UnicodeComparator();
@@ -88,6 +107,15 @@ class UnicodeComparatorTest extends \PHPUnit_Framework_TestCase
         $comparator = new UnicodeComparator();
 
         $this->assertEquals(-1, $comparator->compare($string1, $string2));
+    }
+
+    /**
+     * @dataProvider numbers
+     */
+    public function testCompareNumbersProduceValidResult($a, $b, $expectedResult)
+    {
+        $comparator = new UnicodeComparator();
+        $this->assertEquals($expectedResult, $comparator->compare($a, $b));
     }
 }
  
