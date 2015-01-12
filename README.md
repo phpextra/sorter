@@ -13,6 +13,8 @@
 
 ```php
 
+use PHPExtra\Sorter\Sorter;
+
 $data = array('ccc', 'aaa', 'bbb');
 $sorter = new PHPExtra\Sorter\Sorter();
 
@@ -29,6 +31,10 @@ If you want to compare numbers by their real value, use `NumericComparator`.
 
 ```php
 
+use PHPExtra\Sorter\Sorter;
+use PHPExtra\Sorter\Strategy\SimpleSortStrategy;
+use PHPExtra\Sorter\Comparator\UnicodeCIComparator;
+
 $strategy = new SimpleSortStrategy();
 $strategy->setComparator(new UnicodeCIComparator('pl_PL'));
 
@@ -41,6 +47,9 @@ $sorter->sort(...);
 ###Sorting complex objects
 
 ```php
+
+use PHPExtra\Sorter\Sorter;
+use PHPExtra\Sorter\Strategy\ComplexSortStrategy;
 
 $data = array(
     (object)array('name' => 'Ann', 'position' => '3', 'rating' => '3'),
@@ -62,13 +71,38 @@ $data = $sorter->setStrategy($strategy)->sort($data);
 
 print_r($data);
 
-// returns:
-// array(
-//     (object)array('name' => 'Betty', 'position' => '1', 'rating' => '2'),
-//     (object)array('name' => 'Ann', 'position' => '2', 'rating' => '1'),
-//     (object)array('name' => 'Ann', 'position' => '2', 'rating' => '2'),
-//     (object)array('name' => 'Ann', 'position' => '3', 'rating' => '3'),
-// )
+//    returns:
+//
+//    Array
+//    (
+//        [0] => stdClass Object
+//        (
+//            [name] => Betty
+//            [position] => 1
+//            [rating] => 2
+//        )
+//
+//        [1] => stdClass Object
+//        (
+//            [name] => Ann
+//            [position] => 2
+//            [rating] => 1
+//        )
+//
+//        [2] => stdClass Object
+//        (
+//            [name] => Ann
+//            [position] => 2
+//            [rating] => 2
+//        )
+//
+//        [3] => stdClass Object
+//        (
+//            [name] => Ann
+//            [position] => 3
+//            [rating] => 3
+//        )
+//    )
 
 ```
 
@@ -112,10 +146,18 @@ SortableInterface, ComparatorInterface, StrategyInterface, SorterInterface
 
 ## Installation (Composer)
 
+By command line:
+
+```
+composer require phpextra/sorter:~1.0@dev
+```
+
+By editing composer.json:
+
 ```json
 {
     "require": {
-        "phpextra/sorter":"~1.0"
+        "phpextra/sorter":"~1.0@dev"
     }
 }
 ```
@@ -147,5 +189,5 @@ Jacek Kobus - <kobus.jacek@gmail.com>
 
 ## License information
 
-    See the file LICENSE.txt for copying permission.
+See the included LICENSE file for copying permission.
 
