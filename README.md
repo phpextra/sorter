@@ -5,29 +5,46 @@
 [![Build Status](http://img.shields.io/travis/phpextra/sorter.svg)](https://travis-ci.org/phpextra/sorter)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phpextra/sorter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/phpextra/sorter/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/phpextra/sorter/?branch=master)
-[![GitTip](http://img.shields.io/gittip/jkobus.svg)](https://www.gittip.com/jkobus)
+
+1. [Installation](#installation)
+2. [Usage](#usage)
+    - [Sort using default settings](#sort-using-default-settings)
+    - [Sort using a specific locale](#sort-using-a-specific-locale)
+    - [Sorting arrays keeping the keys intact](#sorting-arrays-keeping-the-keys-intact)
+    - [Sorting complex objects](#sorting-complex-objects)
+    - [Customizing](#customizing)
+3. [Contributing](#contributing)
+4. [Authors](#authors)
+
+##Installation
+
+Installation is done using [Composer](https://getcomposer.org/):
+
+    composer require phpextra/sorter
+
+You can test the library using `phpunit` by running the following command (assuming that you have `phpunit` command available):
+
+    phpunit ./tests
+
 
 ## Usage
 
-###Sorting out-of-the box using default settings
+###Sort using default settings
 
 ```php
-
 use PHPExtra\Sorter\Sorter;
 
 $data = array('ccc', 'aaa', 'bbb');
-$sorter = new PHPExtra\Sorter\Sorter();
-
-$data = $sorter->setSortOrder(Sorter::ASC)->sort($data);
-
-print_r($data); // returns array('aaa', 'bbb', 'ccc');
-
+$sorter = new Sorter();
+$data = $sorter->sort($data);
+print_r($data); // prints array('aaa', 'bbb', 'ccc');
 ```
 ###Sort using a specific locale
 
-Unicode comparator is the default comparator in this library and by default during creation it uses current system locale (from php.ini).
-It's worth to notice that when using this comparator, it may produce odd-looking results for numbers. For example `-1000` is greater than `-100`.
-If you want to compare numbers by their real value, use `NumericComparator`.
+`UnicodeCIComparator` (case-insensitive) comparator is the **default comparator** used in this library and by default during creation it uses current system locale (from php.ini).
+
+> It's worth to notice that when using this comparator, it may produce **odd-looking results for numbers**. For example `-1000` is greater than `-100`.
+> If you want to compare numbers by their real value, use `NumericComparator`.
 
 ```php
 
@@ -37,11 +54,28 @@ use PHPExtra\Sorter\Comparator\UnicodeCIComparator;
 
 $strategy = new SimpleSortStrategy();
 $strategy->setComparator(new UnicodeCIComparator('pl_PL'));
-
 $sorter = new Sorter($strategy);
-
 $sorter->sort(...);
 
+```
+
+###Sorting arrays keeping the keys intact
+
+```php
+
+use PHPExtra\Sorter\Sorter;
+use PHPExtra\Sorter\Strategy\SimpleSortStrategy;
+use PHPExtra\Sorter\Comparator\UnicodeCIComparator;
+
+$array = array(0 => 'a', 1 => 'c', 2 => 'b');
+
+$strategy = new SimpleSortStrategy();
+$strategy->setMaintainKeyAssociation(true);
+
+$sorter = new Sorter($strategy);
+$sorter->sort($array);
+
+print_r($array); // prints array(0 => 'a', 2 => 'b', 1 => 'c')
 ```
 
 ###Sorting complex objects
@@ -61,9 +95,9 @@ $data = array(
 $strategy = new ComplexSortStrategy();
 $strategy
     ->setSortOrder(Sorter::ASC)
-    ->sortBy('position')    // sort by position
-    ->sortBy('name')        // if position is equal sort by name
-    ->sortBy(function($object){return $object->rating})      // if position and name are equal, use rating
+    ->sortBy('position')                                    // sort by position
+    ->sortBy('name')                                        // sort by name if position is equal
+    ->sortBy(function($object){return $object->rating})     // sort by rating if name is equal
 ;
 
 $sorter = new PHPExtra\Sorter\Sorter();
@@ -71,7 +105,7 @@ $data = $sorter->setStrategy($strategy)->sort($data);
 
 print_r($data);
 
-//    returns:
+//    prints:
 //
 //    Array
 //    (
@@ -106,21 +140,11 @@ print_r($data);
 
 ```
 
-**sortBy($accessor, $order, $comparator)** takes three arguments:
-
-**$accessor** - that can be either a string or a closure that will extract value from an object.
-If it's string strategy will try to access it like an array if possible, otherwise it will check if there is a public property with given name.
-
-**$order** - int value; both (-1, 1) are available as constants in SorterInterface.
-
-**ComparatorInterface $comparator** - comparator that will be used exclusively for that field.
-
-
 ###Customizing
 
 You can create your own strategies for more complicated data sets.
-Provided ObjectSortStrategy should cover most of your needs, and if it does not, try using your own Comparators.
-You can replace default Comparators for a whole Strategy or define your own only for specific properties:
+Provided `ComplexSortStrategy` should cover most of your needs, and if it does not, try using your own comparators.
+You can replace default comparators for a whole strategy or define your own only for specific properties:
 
 ```php
 
@@ -131,63 +155,19 @@ $strategy
     ->sortBy('rating')
 ;
 
-// or ...
+// or set your own comparator
 
 $strategy->setComparator(new MyOwnPropertyComparator());
 
 ```
-
-## External API
-
-External API:
-
-SortableInterface, ComparatorInterface, StrategyInterface, SorterInterface
-
-
-## Installation (Composer)
-
-By command line:
-
-```
-composer require phpextra/sorter:~1.0@dev
-```
-
-By editing composer.json:
-
-```json
-{
-    "require": {
-        "phpextra/sorter":"~1.0@dev"
-    }
-}
-```
-
-##Running tests
-
-```
-// Windows
-composer install & call ./vendor/bin/phpunit.bat ./tests
-```
-
 ##Contributing
 
 All code contributions must go through a pull request.  
 Fork the project, create a feature branch, and send me a pull request.
-To ensure a consistent code base, you should make sure the code follows
-the [coding standards](http://symfony.com/doc/2.0/contributing/code/standards.html).
-If you would like to help take a look at the [list of issues](https://github.com/phpextra/sorter/issues).
-
-##Requirements
-
-See **composer.json** for a full list of dependencies.
 
 ##Authors
 
 This library was inspired by [https://github.com/graze/sort](https://github.com/graze/sort).
 
 Jacek Kobus - <kobus.jacek@gmail.com>
-
-## License information
-
-See the included LICENSE file for copying permission.
 
