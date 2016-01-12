@@ -3,7 +3,7 @@
 namespace fixtures\PHPExtra\Sorter\Strategy;
 
 use PHPExtra\Sorter\Sorter;
-use PHPExtra\Sorter\Strategy\ObjectSortStrategy;
+use PHPExtra\Sorter\Strategy\ComplexSortStrategy;
 
 /**
  * The ObjectSortStrategyTest class
@@ -53,7 +53,7 @@ class ObjectSortStrategyTest extends \PHPUnit_Framework_TestCase
     public function testSortComplexDataSet(array $expected, array $unsorted)
     {
 
-        $strategy = new ObjectSortStrategy();
+        $strategy = new ComplexSortStrategy();
         $strategy
             ->setSortOrder(Sorter::ASC)
             ->sortBy('position')
