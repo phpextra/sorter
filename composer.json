@@ -34,6 +34,6 @@
         "phpunit/phpunit": "~4.2"
     },
     "archive": {
-        "exclude": ["*", ".*", "!/src", "!/README.md", "!/LICENSE.md"]
+        "exclude": ["*", ".*", "!/src", "!/README.md"]
     }
 }

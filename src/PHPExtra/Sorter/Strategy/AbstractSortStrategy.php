@@ -15,7 +15,7 @@ abstract class AbstractSortStrategy implements StrategyInterface
     /**
      * @var int
      */
-    private $sortOrder = self::ASC;
+    private $sortOrder = null;
 
     /**
      * @var bool
@@ -31,11 +31,13 @@ abstract class AbstractSortStrategy implements StrategyInterface
      * @param int                 $sortOrder  Default sort order
      * @param ComparatorInterface $comparator Default comparator
      */
-    function __construct(ComparatorInterface $comparator = null, $sortOrder = null)
+    function __construct(ComparatorInterface $comparator = null, $sortOrder = self::ASC)
     {
-        if ($sortOrder) {
-            $this->setSortOrder($sortOrder);
+        if($sortOrder === null){
+            $sortOrder = self::ASC;
         }
+
+        $this->setSortOrder($sortOrder);
 
         if (!$comparator) {
             $comparator = new UnicodeCIComparator();
@@ -81,7 +83,6 @@ abstract class AbstractSortStrategy implements StrategyInterface
     }
 
     /**
-     *
      * {@inheritdoc}
      */
     public function setMaintainKeyAssociation($maintainKeyAssociation)
@@ -96,12 +97,13 @@ abstract class AbstractSortStrategy implements StrategyInterface
     {
         $comparator = $this->getComparator();
         $checker = $this->getValueChecker();
+        $sortOrder = $this->sortOrder;
 
-        return function ($a, $b) use ($comparator, $checker) {
+        return function ($a, $b) use ($comparator, $checker, $sortOrder) {
             /** @var ComparatorInterface $comparator */
             $checker($a, $b, $comparator);
 
-            return $comparator->compare($a, $b);
+            return $comparator->compare($a, $b) * $sortOrder;
         };
     }
 
