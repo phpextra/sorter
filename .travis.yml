@@ -9,10 +9,9 @@ php:
 
 matrix:
     allow_failures:
-        - 7.0
         - php: hhvm
 
-script: ./vendor/bin/phpunit -c ./phpunit.xml.dist ./tests/fixtures
+script: phpunit ./tests
 before_script:
   - composer self-update
   - composer install --no-interaction --verbose
