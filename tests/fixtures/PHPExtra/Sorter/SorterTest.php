@@ -3,8 +3,8 @@
 namespace fixtures\PHPExtra\Sorter;
 
 use PHPExtra\Sorter\Sorter;
-use PHPExtra\Sorter\Strategy\ObjectSortStrategy;
-use PHPExtra\Sorter\Strategy\StringArraySortStrategy;
+use PHPExtra\Sorter\Strategy\ComplexSortStrategy;
+use PHPExtra\Sorter\Strategy\SimpleSortStrategy;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -21,7 +21,7 @@ class SorterTest extends PHPUnit_Framework_TestCase
 
     public function testCreateNewSorterInstanceWithCustomStrategy()
     {
-        $sorter = new Sorter(new ObjectSortStrategy());
+        new Sorter(new ComplexSortStrategy());
     }
 
     public function testSortAnArrayOfStringsUsingDefaultSorter()
@@ -34,6 +34,18 @@ class SorterTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $sorted);
     }
+
+    public function testSortAnArrayOfStringsUsingDefaultSorterInReverseOrder()
+    {
+        $expected = array('e', 'd', 'c', 'b', 'a');
+        $sortable = array('a', 'c', 'b', 'e', 'd');
+
+        $sorter = new Sorter();
+        $sorter->setSortOrder(Sorter::DESC);
+        $sorted = $sorter->sort($sortable);
+
+        $this->assertEquals($expected, $sorted);
+    }
     
     public function testSortAnArrayOfStringsUsingDefaultSorterMaintainingKeyAssociation()
     {
@@ -41,7 +53,7 @@ class SorterTest extends PHPUnit_Framework_TestCase
         $sortable = array(10 => 'bcd', 0 => 'cdb', 'k' => '20', 194 => 'abc', -10 => '1020');
 
         $sorter = new Sorter();
-        $strategy = new StringArraySortStrategy();
+        $strategy = new SimpleSortStrategy();
         $strategy->setMaintainKeyAssociation(true);
         $sorter->setStrategy($strategy);
         $sorted = $sorter->sort($sortable);
@@ -52,8 +64,7 @@ class SorterTest extends PHPUnit_Framework_TestCase
     public function testSetCustomStrategyAfterObjectCreation()
     {
         $sorter = new Sorter();
-        $sorter->setStrategy(new ObjectSortStrategy());
+        $sorter->setStrategy(new ComplexSortStrategy());
     }
-
 }
  
